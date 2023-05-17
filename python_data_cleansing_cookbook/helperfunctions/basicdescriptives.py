@@ -33,5 +33,5 @@ def gettots(df):
     return pd.DataFrame(out)
 
 def getmissings(df, byrowperc=False):
-    return df.isnull().sum(), df.isnull().sum(axis=1).value_counts().sort_index()
+    return df.isnull().sum(), df.isnull().sum(axis=1).value_counts(normalize=byrowperc).sort_index()
 
