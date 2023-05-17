@@ -1,6 +1,6 @@
 import pandas as pd
 
-def getfirstlook(df,nrows=5,uniqueids=None):
+def getfirstlook(df,nrows=5,uniqueids=None):                # 데이터 처음 보기
     out={}
     out['head']=df.head(nrows)
     out['dtypes']=df.dtypes
@@ -12,11 +12,11 @@ def getfirstlook(df,nrows=5,uniqueids=None):
         out['uniqueids']=df[uniqueids].nunique()
     return out
 
-def displaydict(dicttodisplay):
+def displaydict(dicttodisplay):                             # 딕셔너리를 보기 좋게
     print(*(': '.join(map(str,x))
             for x in dicttodisplay.items()), sep='\n\n')
     
-def gettots(df):
+def gettots(df):                                            # 요약 통계
     out={}
 
     out['min']=df.min()
@@ -32,10 +32,10 @@ def gettots(df):
 
     return pd.DataFrame(out)
 
-def getmissings(df, byrowperc=False):
+def getmissings(df, byrowperc=False):                       # 열, 행 결측값
     return df.isnull().sum(), df.isnull().sum(axis=1).value_counts(normalize=byrowperc).sort_index()
 
-def makefreqs(df, outfile):
+def makefreqs(df, outfile):                                 # 범주형 변수 전체 빈도
     freqout=open(outfile,'w')
     for col in df.select_dtypes(include=['category']):
         print(col,'-----------------','frequencies',
@@ -44,3 +44,13 @@ def makefreqs(df, outfile):
               sep='\n\n',end='\n\n\n',file=freqout)
     
     freqout.close()
+
+def getcnts(df, cats, rowsel=None):
+    tots = cats[:-1]
+    catcnt = df.groupby(cats).size().reset_index(name='catcnt')
+    totcnt = df.groupby(tots).size().reset_index(name='totcnt')
+    percs = pd.merge(catcnt, totcnt, left_on=tots, right_on=tots, how="left")
+    percs['percent'] = percs.catcnt / percs.totcnt
+    if (rowsel is not None):
+      percs = percs.loc[eval("percs." + rowsel)]
+    return percs
