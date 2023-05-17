@@ -31,3 +31,6 @@ def gettots(df):
     out['iqr']=out['qr3'] - out['qr1']
 
     return pd.DataFrame(out)
+
+def getmissings(df, byrowperc=False):
+    return df.isnull().sum(), df.isnull().sum(axis=1).value_counts(normalize=byrowperc).sort_index()
