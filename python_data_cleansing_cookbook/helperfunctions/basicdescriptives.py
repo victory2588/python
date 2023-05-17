@@ -45,7 +45,7 @@ def makefreqs(df, outfile):                                 # 범주형 변수 �
     
     freqout.close()
 
-def getcnts(df, cats, rowsel=None):
+def getcnts(df, cats, rowsel=None):                         # 하위 그룹별 카운트와 비율 확인
     tots = cats[:-1]
     catcnt = df.groupby(cats).size().reset_index(name='catcnt')
     totcnt = df.groupby(tots).size().reset_index(name='totcnt')
