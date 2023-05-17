@@ -35,3 +35,12 @@ def gettots(df):
 def getmissings(df, byrowperc=False):
     return df.isnull().sum(), df.isnull().sum(axis=1).value_counts(normalize=byrowperc).sort_index()
 
+def makefreqs(df, outfile):
+    freqout=open(outfile,'w')
+    for col in df.select_dtypes(include=['category']):
+        print(col,'-----------------','frequencies',
+              df[col].value_counts().sort_index(),'percentages',
+              df[col].value_counts(normalize=True).sort_index(),
+              sep='\n\n',end='\n\n\n',file=freqout)
+    
+    freqout.close()
